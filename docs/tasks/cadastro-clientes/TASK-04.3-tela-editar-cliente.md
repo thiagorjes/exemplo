@@ -1,6 +1,6 @@
 ### TASK-04.3 — Tela de edição de cliente (T4, modo editar) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -35,7 +35,9 @@ compartilhado, agora pré-preenchido com os dados do cliente.
 | --- | --- | --- |
 | `frontend/src/app/(protected)/clientes/_components/cliente-form.tsx` | criar | formulário compartilhado (extraído) |
 | `frontend/src/app/(protected)/clientes/novo/page.tsx` | alterar | passa a usar o componente extraído |
-| `frontend/src/app/(protected)/clientes/[id]/editar/page.tsx` | criar | carrega, trata 404/410, usa o formulário compartilhado |
+| `frontend/src/app/(protected)/clientes/novo/_components/formulario-cliente-pf.tsx` | remover | conteúdo movido para `cliente-form.tsx` (`FormularioPF` interno) |
+| `frontend/src/app/(protected)/clientes/novo/_components/formulario-cliente-pj.tsx` | remover | conteúdo movido para `cliente-form.tsx` (`FormularioPJ` interno) |
+| `frontend/src/app/(protected)/clientes/[id]/editar/page.tsx` | criar | carrega, trata 404/410, usa o formulário compartilhado — client component (não Server Component), ver nota abaixo |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `e2e/`,
 `docs/design/cadastro-clientes/prototypes/IncluirEditarCliente.html` (referência visual).
@@ -65,3 +67,4 @@ mesmo protótipo cobre os dois modos, incluir e editar).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | Duas divergências deliberadas da task, por risco de regressão: (1) `cliente-form.tsx` não é um formulário único genérico — mantém `FormularioPF`/`FormularioPJ` como sub-componentes internos ao mesmo arquivo (cada um com seu próprio `useForm`/schema, já validados em TASK-03.7/03.8), com `ClienteForm` só escolhendo qual renderizar; evita reescrever a lógica de validação/sócios que já funcionava. (2) `[id]/editar/page.tsx` é client component com fetch em `useEffect` (não Server Component lendo cookies), para evitar passar uma função `salvar` de servidor para client através de Server Action (incompatível com devolver um `Response` do fetch) — o fetch roda direto no browser, cookie de sessão vai junto automaticamente (same-origin). `tipo` travado (botões desabilitados) quando `valoresIniciais` existe. Verificado via script ad-hoc (não commitado): pré-preenche, trava tipo, salva e redireciona, trata cliente excluído com a mensagem certa. Suíte e2e de inclusão (SCN-004, SCN-005) continua verde após a extração — uma falha transitória na primeira rodada (recompilação fria do Next.js logo após o refactor) não se repetiu. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
