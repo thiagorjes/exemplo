@@ -1,6 +1,6 @@
 ### TASK-01.5 — BFF: proxy de sessão e cookie [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -32,8 +32,10 @@ além do login pode existir.
 | Arquivo | Ação | Observação |
 | --- | --- | --- |
 | `frontend/src/app/api/sessoes/route.ts` | criar | `POST` — troca credencial por cookie |
-| `frontend/src/proxy.ts` | criar | `validarSessaoAtual()` |
+| `frontend/src/lib/validar-sessao.ts` | criar | `validarSessaoAtual()` — a task pedia `frontend/src/proxy.ts`, mas esse caminho é reservado pelo Next.js 16 (substituiu `middleware.ts`; exige exportar uma função `proxy`) — colide e quebra o build. Renomeado. |
 | `frontend/src/app/(protected)/layout.tsx` | criar | redireciona para `/login` sem sessão válida |
+| `frontend/src/app/(protected)/verificacao/page.tsx` | criar | página mínima só para os critérios de aceite #2/#3 — nenhuma tela real existe ainda sob `(protected)/`, a primeira chega no EPIC-02 |
+| `.gitignore` | alterar | acrescenta `*.tsbuildinfo` (cache do `tsc --incremental`) |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `e2e/`.
 
@@ -63,3 +65,4 @@ completo login → cookie → navegação protegida) e §8 ("Cookie `__Host-sess
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `POST /api/sessoes` troca credencial por cookie `__Host-sessao` (HttpOnly/Secure/SameSite=Strict/Path=/), devolve só `{ papel }`. **Achado grave da task:** o caminho pedido, `frontend/src/proxy.ts`, é reservado pelo Next.js 16 — substituiu `middleware.ts` e exige exportar uma função `proxy`; ter esse arquivo com outro formato quebra o build inteiro ("This function is what Next.js runs for every request..."). Renomeado para `frontend/src/lib/validar-sessao.ts`. Layout protegido (`(protected)/layout.tsx`) redireciona para `/login` sem sessão válida. Criada página mínima `(protected)/verificacao/page.tsx` só para testar os critérios 2/3 (nenhuma tela real existe ainda sob `(protected)/` nesta altura do flow). Limitação técnica aceita: `cookies().delete()` não é permitido em Server Component (só em Server Action/Route Handler) — o `try/catch` em `validar-sessao.ts` captura isso silenciosamente; o cookie inválido não é literalmente apagado nesta camada, mas fica inerte, porque toda rota protegida sempre revalida contra o core a cada acesso (a presença do cookie nunca concede acesso sozinha) — a limpeza efetiva de fato acontece no próximo `POST /api/sessoes` bem-sucedido, que sobrescreve o valor. Critérios de aceite 1-3 confirmados manualmente (`curl`: login → `Set-Cookie` correto e corpo só com `papel`; sem cookie → `307` para `/login`; cookie inválido → `307` para `/login`, sem `Set-Cookie` de limpeza, pelo motivo acima). `check_escopo.py --base HEAD` → exit 0. |

@@ -10,6 +10,7 @@ dist/
 build/
 .next/
 next-env.d.ts
+*.tsbuildinfo
 
 # Banco de dados local (SQLite em arquivo, backend/node)
 *.db
