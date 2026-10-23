@@ -1,6 +1,6 @@
 ### TASK-03.7 — Formulário de inclusão de cliente Pessoa Física (T4) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -31,7 +31,10 @@ Fecha RF-004 visualmente — formulário de inclusão para Pessoa Física.
 
 | Arquivo | Ação | Observação |
 | --- | --- | --- |
-| `frontend/src/app/(protected)/clientes/novo/page.tsx` | criar | formulário, modo Pessoa Física |
+| `frontend/src/app/(protected)/clientes/novo/page.tsx` | criar | seletor de tipo PF/PJ; renderiza o sub-componente conforme o tipo escolhido |
+| `frontend/src/app/(protected)/clientes/novo/_components/formulario-cliente-pf.tsx` | criar | formulário Pessoa Física, isolado em componente próprio (facilita a TASK-03.8 acrescentar o par PJ) |
+| `frontend/package.json` | alterar | dependências novas — ver Histórico |
+| `frontend/package-lock.json` | alterar | gerado pelo `npm install` |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `e2e/`,
 `docs/design/cadastro-clientes/prototypes/IncluirEditarCliente.html` (referência visual).
@@ -63,3 +66,4 @@ espelhar no formulário).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `page.tsx` (seletor PF/PJ) + `_components/formulario-cliente-pf.tsx` (`react-hook-form` + `@hookform/resolvers/zod`, schema Zod próprio do frontend espelhando `backend/src/cliente/schema.ts` — pacotes separados nesta demo, sem módulo compartilhado, por isso réplica e não import). Instaladas `react-hook-form@7.54.2`, `@hookform/resolvers`, `zod@4.0.0` (igual ao backend). Sem máscara de CPF (`react-imask`) e sem toast (`sonner`): nenhum cenário congelado exige, e introduzir as duas bibliotecas sem uso testado seria escopo não pedido — mesma decisão já tomada na TASK-02.3 para toast. Bug real encontrado e corrigido: `@hookform/resolvers@3.9.1` não é compatível com `zod@4` (lança `ZodError` não tratado em vez de popular `formState.errors` — `unhandledRejection` visível no console do Next.js); resolvido fixando `@hookform/resolvers@5.2.2`, que suporta Zod 4. SCN-004.1/.2/.3 verdes headed, banco resetado antes. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
