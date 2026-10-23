@@ -1,6 +1,6 @@
 ### TASK-04.2 — BFF: proxy de cliente por id [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -49,3 +49,4 @@ Referência viva: `frontend/src/app/api/clientes/route.ts` (TASK-03.5).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `app/api/clientes/[id]/route.ts` (`GET`/`PUT`/`DELETE`), repassa status sem traduzir (`410` preservado). `DELETE` trata `204` à parte (sem corpo) antes de tentar `.json()`. Critérios de aceite 1-3 confirmados via `curl` pelo BFF (200/200/204/204/410). `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
