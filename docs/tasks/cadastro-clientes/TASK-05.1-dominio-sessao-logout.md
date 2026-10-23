@@ -1,6 +1,6 @@
 ### TASK-05.1 — Domínio sessão: logout [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -30,9 +30,10 @@ separado daquela task porque RF-009 nasceu de uma emenda posterior ao PRD origin
 | --- | --- | --- |
 | `backend/src/sessao/repository.ts` | alterar | acrescenta `encerrarSessao` |
 | `backend/src/sessao/service.ts` | alterar | acrescenta `logout` |
-| `backend/src/sessao/routes.ts` | alterar | acrescenta `DELETE /:id` |
+| `backend/src/sessao/routes.ts` | alterar | acrescenta `DELETE /:id`; virou factory `criarSessaoRouter(logoutFn)` — ver nota |
+| `backend/src/app.ts` | alterar | fora do escopo original — `AppDeps.sessaoRepository` ganhou `encerrar?`, ao lado de `validar?` (TASK-04.1); injeta `logoutFn` em `criarSessaoRouter` |
 
-**Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `backend/test/`.
+**Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, conteúdo dos testes já existentes em `backend/test/`.
 
 #### Guia técnico — padrão a seguir
 
@@ -59,3 +60,4 @@ expirada").
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; separada da TASK-01.3 de propósito, por ser uma emenda posterior ao PRD. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `encerrarSessao`/`logout`/`DELETE /:id` idempotentes, seguindo `criarXService(repo)`/`criarApp(deps)` (padrão DI já estabelecido em TASK-04.1). Critérios 1-3 confirmados via `curl` (204/401/204/204). `npm test`: `sessao/routes.test.ts` (SCN-009.3, 2 testes) e `cliente/routes.test.ts` (SCN-006.3) todos passam agora — zera a pendência de EPIC-04/05 registrada desde TASK-01.3. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |

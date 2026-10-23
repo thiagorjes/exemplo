@@ -52,3 +52,12 @@ export function tocarSessao(id: string): void {
     id,
   );
 }
+
+// Idempotente por construção — não falha nem reescreve se a sessão já estava encerrada ou nunca
+// existiu (RF-009, SCN-009.2 e SCN-009.3).
+export function encerrarSessao(id: string): void {
+  db.prepare('UPDATE sessoes SET encerrada_em = ? WHERE id = ? AND encerrada_em IS NULL').run(
+    new Date().toISOString(),
+    id,
+  );
+}
