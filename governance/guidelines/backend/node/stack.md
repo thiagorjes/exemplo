@@ -11,7 +11,7 @@
 | Linguagem | Versão | Uso |
 |---|---|---|
 | TypeScript | 5.9.2 | Toda a aplicação, `strict: true` no `tsconfig.json` |
-| Node.js | 24 LTS (24.9.0, fixado em `.nvmrc`) | Runtime |
+| Node.js | 24 LTS (24.22.1, fixado em `.nvmrc`) | Runtime |
 
 ## Framework principal
 
