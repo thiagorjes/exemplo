@@ -1,6 +1,6 @@
 ### TASK-01.4 — Scaffolding do frontend Next.js [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -51,6 +51,14 @@ elaborado — nenhuma decisão de marca, cor ou tipografia é tomada aqui, só m
 | `frontend/src/components/ui/table.tsx` | criar | primitivo do design system |
 | `frontend/src/components/ui/alert-dialog.tsx` | criar | primitivo do design system |
 | `frontend/.env.example` | criar | `API_GATEWAY_URL`, `SESSION_COOKIE_SECRET` |
+| `frontend/tsconfig.json` | criar | path alias `@/* → ./src/*` — necessário para Next.js, não listado na task original |
+| `frontend/next.config.js` | criar | `poweredByHeader: false` — arquivo obrigatório do Next.js |
+| `frontend/postcss.config.js` | criar | plugins `tailwindcss`/`autoprefixer` — obrigatório para Tailwind 3 |
+| `frontend/src/components/ui/label.tsx` | criar | dependência direta do `input.tsx` copiado da coleção — sem ele o Input não compila |
+| `frontend/src/app/page.tsx` | criar | página de verificação do critério de aceite #2 (renderiza `Button`) |
+| `frontend/package-lock.json` | criar | gerado por `npm install`, não editado à mão |
+| `frontend/AGENTS.md` | criar | gerado automaticamente por `next dev`/`next build` (Next.js 16) — mantido conforme a própria orientação do arquivo ("commit it to keep the tree clean") |
+| `.gitignore` | alterar | acrescenta `.next/`, `next-env.d.ts` (raiz do repositório) |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`,
 `docs/design/cadastro-clientes/prototypes/*.html` (são referência visual, não código de
@@ -84,3 +92,4 @@ esperado (não copiar HTML estático — é protótipo, não componente React).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`, a partir da coleção `frontend/nextjs` elaborada. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | Copiados literalmente da coleção `frontend/nextjs/components/`: `_lib/utils.ts` (`cn`), `ui/button.tsx`, `ui/input.tsx`, `ui/label.tsx` (dependência de `input.tsx`, não listada na task), `ui/table.tsx`. `ui/alert-dialog.tsx` não existia na coleção (só `dialog.tsx`) — escrito do zero seguindo o mesmo padrão headless+CVA, usando `@radix-ui/react-alert-dialog`. Tokens de `design-tokens.json` (light/dark) em `globals.css` + `tailwind.config.ts`. Divergências vs. a cópia literal: `button.tsx`/`input.tsx` não tinham `'use client'` no arquivo-fonte, mas usam hooks/interatividade — sem a diretiva o build quebrava (`createContext is not a function`, App Router tentando renderizar como Server Component); adicionada, conforme a própria regra do design system ("'use client' nos primitivos interativos"). Faltavam `tsconfig.json`, `next.config.js`, `postcss.config.js` — obrigatórios do Next.js, não listados na task original. Versões fixadas nas mais recentes publicadas compatíveis com os majors pedidos (Next 16.4.2, React 19.3.1, TypeScript 6.0.3 — a 6.x mais recente, já que 7.x não é o que a coleção pede, Tailwind 3.4.17 exato). Critérios de aceite 1-3 confirmados manualmente (`npm run build` ok; `npm start` e `npm run dev` sobem em :3000; HTML renderizado confirma `.bg-primary{background-color:var(--primary)}` com `--primary:#004b8d`). `frontend/AGENTS.md` (gerado automaticamente pelo Next.js 16 a cada `dev`/`build`) commitado, conforme orientação do próprio arquivo. `check_escopo.py --base HEAD` → exit 0. |

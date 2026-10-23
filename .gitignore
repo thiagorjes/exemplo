@@ -8,6 +8,8 @@ node_modules/
 # Build
 dist/
 build/
+.next/
+next-env.d.ts
 
 # Banco de dados local (SQLite em arquivo, backend/node)
 *.db
