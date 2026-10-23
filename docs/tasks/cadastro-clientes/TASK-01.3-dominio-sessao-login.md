@@ -1,6 +1,6 @@
 ### TASK-01.3 — Domínio sessão: login e validação [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -54,6 +54,8 @@ PRD, e misturá-lo aqui perderia a rastreabilidade de que essa parte do escopo c
 | `backend/src/sessao/service.ts` | criar | `login`, `validarSessao` |
 | `backend/src/sessao/routes.ts` | criar | `POST /`, `GET /:id` |
 | `backend/src/app.ts` | alterar | monta o router em `/v1/sessoes` |
+| `backend/src/config/index.ts` | alterar | acrescenta `SESSION_IDLE_TIMEOUT_MS` (opcional, default 300000) — RN-004 não pode ser hardcoded, ver `docs/techspec/cadastro-clientes-techspec.md` §8 |
+| `backend/jest.config.js` | criar | preset `ts-jest` — ausente desde a TASK-01.1, sem ele nenhum teste Jest do backend roda (nem os de EPIC-04/05, que já existem em `backend/test/`) |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `backend/test/`.
 
@@ -82,3 +84,4 @@ Referência viva: `docs/techspec/cadastro-clientes/contracts/sessao.md` (contrat
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; escopo do `DELETE` (logout) deliberadamente excluído — ver EPIC-05. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | Domínio `sessao` completo: `model.ts`, `repository.ts` (inclui `buscarUsuarioPorCpf` lendo a tabela `usuarios` direto, já que o domínio `usuario` próprio só nasce no EPIC-02 — revisar lá para não duplicar acesso à tabela), `service.ts`, `routes.ts`, router montado em `app.ts` sob `/v1/sessoes`. RN-004 implementada configurável via `SESSION_IDLE_TIMEOUT_MS` (`config/index.ts` alterado), não hardcoded em "5 minutos" como o texto da task sugeria — já esperado, decisão tomada depois da task ter sido escrita (ver `docs/techspec/cadastro-clientes-techspec.md` §8). Criado `backend/jest.config.js` (preset `ts-jest`) — faltava desde a TASK-01.1, sem ele nenhum teste Jest do backend roda. Critérios de aceite 1-3 confirmados manualmente via `curl` (login do admin do seed → 201; senha errada e CPF inexistente → mesmo corpo 401; `GET` da sessão recém-criada → 200). **Achado para EPIC-04/EPIC-05:** `backend/test/sessao/routes.test.ts` e `backend/test/cliente/routes.test.ts` (escritos em `/tests`) esperam `app.ts` exportar `criarApp(deps)` — uma factory com injeção de dependência (repository injetável) — que não existe em nenhum lugar da TechSpec/architecture.md (o padrão documentado é import direto routes→service→repository, sem DI). Isso é trabalho de quem implementar `DELETE /v1/sessoes/{id}` (TASK-05.x) e `DELETE /v1/clientes/{id}` com teste de concorrência (TASK-04.x) — registrado também em `memory/state.md` como pendência, não resolvido aqui por estar fora do escopo desta task (SCN-001.1/.2 apenas). `check_escopo.py --base HEAD` → exit 0. |
