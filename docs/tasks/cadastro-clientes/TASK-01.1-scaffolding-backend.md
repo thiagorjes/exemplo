@@ -1,6 +1,6 @@
 ### TASK-01.1 — Scaffolding do backend Node [api]
 
-- **Status:** pendente
+- **Status:** bloqueada
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -91,3 +91,4 @@ Referência viva: `governance/guidelines/backend/node/architecture.md` (estrutur
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`, a partir de `docs/techspec/cadastro-clientes-techspec.md` e `governance/guidelines/backend/node/architecture.md`. |
+| 2026-10-23 | bloqueio (tentativa 1 de 3) | Ambiente de execução tem Node **20.20.2** (sem `node:sqlite`, exige Node ≥22 experimental / 24 estável). `nvm install 24.9.0` e `nvm install 24.22.1` falharam — download de `nodejs.org` bloqueado pela rede (curl a `nodejs.org` e `registry.npmjs.org` diretos: erro SSL/timeout). Único canal de rede liberado: o mirror npm corporativo (`https://nexus3-cicd-tools.cloud.sfb/repository/npm-public/`, confirmado com `npm ping`) e `github.com` (200 OK, inclusive `git push` já funcionou nesta sessão). Isso significa que **instalar o Node 24 não é possível nesta máquina/rede**, mas pacotes npm via Nexus e downloads hospedados em GitHub Releases (ex.: binário pré-compilado do `better-sqlite3`) provavelmente funcionariam. Não troquei a stack por conta própria — `stack.md` veda `better-sqlite3` explicitamente e essa é uma decisão de arquitetura (ADR-001/stack.md), não algo que `/implement` decide sozinho. Parando aqui e escalando para o coordenador decidir: (a) o usuário instala/disponibiliza Node 24 nesta máquina, (b) revisar a decisão de stack para `better-sqlite3` (ou outra alternativa sem binário do `nodejs.org`) via um novo ADR, ou (c) outro caminho que o coordenador prefira. Nenhum arquivo de produção foi criado ainda — escopo integralmente intocado. |
