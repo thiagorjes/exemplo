@@ -60,7 +60,10 @@ test.describe('Incluir cliente — Pessoa Física', () => {
     await page.getByLabel('Telefone').fill('27977777777');
     await page.getByRole('button', { name: 'Salvar cliente' }).click();
 
-    await expect(page.getByRole('alert')).toBeVisible();
+    // Filtro por texto não vazio: o Next.js App Router injeta um route announcer oculto com
+    // role="alert" em toda página — sem o filtro, getByRole('alert') colide com ele em modo
+    // estrito (ver emenda de SCN-001.2 em docs/tests/cadastro-clientes-verificacao.md).
+    await expect(page.getByRole('alert').filter({ hasText: /.+/ })).toBeVisible();
     await expect(page).toHaveURL(/\/clientes\/novo/);
   });
 

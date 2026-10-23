@@ -31,9 +31,14 @@ test.describe('Criar usuário', () => {
     await page.getByLabel('Senha').fill('outrasenha123');
     await page.getByRole('button', { name: 'Criar usuário' }).click();
 
-    await expect(page.getByRole('alert')).toBeVisible();
-    // A criação foi recusada: nenhum segundo registro com o mesmo CPF aparece duplicado na lista.
-    await expect(page.getByText(cpfExistente)).toHaveCount(1);
+    // Filtro por texto não vazio: o Next.js App Router injeta um route announcer oculto com
+    // role="alert" em toda página — sem o filtro, getByRole('alert') colide com ele em modo
+    // estrito (ver emenda de SCN-001.2 em docs/tests/cadastro-clientes-verificacao.md).
+    await expect(page.getByRole('alert').filter({ hasText: /.+/ })).toBeVisible();
+    // A criação foi recusada: nenhum segundo registro com o mesmo CPF aparece duplicado na
+    // lista. Escopado à tabela (getByRole('cell')), não a página inteira — a mensagem de erro
+    // acima também cita o CPF em texto livre, o que faria getByText(cpfExistente) contar 2.
+    await expect(page.getByRole('cell', { name: cpfExistente, exact: true })).toHaveCount(1);
   });
 
   test('SCN-002.3 — usuário comum não pode criar usuário', async ({ page, context }) => {
