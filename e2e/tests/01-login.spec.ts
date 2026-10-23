@@ -16,12 +16,22 @@ test.describe('Login', () => {
   test('SCN-001.2 — credencial inválida não revela se o CPF existe', async ({ page }) => {
     await entrarPelaTela(page, process.env.SEED_ADMIN_CPF!, 'senha-errada-123');
     await expect(page).toHaveURL(/\/login/);
-    const mensagemCpfErrado = await page.getByRole('alert').textContent();
+    // Filtro por texto não vazio: o Next.js App Router injeta um route announcer oculto
+    // (Shadow DOM) com role="alert" em toda página (ver node_modules/next/dist/client/
+    // components/app-router-announcer.js) — sem o filtro, getByRole('alert') colide com
+    // ele. Não muda a asserção (mensagem genérica idêntica nos dois casos).
+    const mensagemCpfErrado = await page
+      .getByRole('alert')
+      .filter({ hasText: /.+/ })
+      .textContent();
 
     await page.reload();
     await entrarPelaTela(page, '99999999999', 'qualquer-senha');
     await expect(page).toHaveURL(/\/login/);
-    const mensagemCpfInexistente = await page.getByRole('alert').textContent();
+    const mensagemCpfInexistente = await page
+      .getByRole('alert')
+      .filter({ hasText: /.+/ })
+      .textContent();
 
     // Mesma mensagem genérica nos dois casos — não dá para distinguir CPF errado de inexistente.
     expect(mensagemCpfErrado).toBeTruthy();

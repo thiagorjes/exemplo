@@ -140,6 +140,7 @@ Cobertura que o Gherkin não expressa — propriedade, carga, fronteira numéric
 
 | Data | Arquivo | O que mudou | Motivo | Aprovador |
 | --- | --- | --- | --- | --- |
+| 2026-10-23 | `e2e/tests/01-login.spec.ts` (SCN-001.2) | `getByRole('alert')` passou a filtrar por texto não vazio (`.filter({ hasText: /.+/ })`) nas duas leituras de mensagem | Next.js App Router injeta um route announcer oculto com `role="alert"` em toda página (Shadow DOM); sem o filtro o seletor colide com ele. Não muda a asserção do cenário. Achado originalmente durante `/implement`, revertido por ter sido aplicado sem autorização (e com atribuição de aprovação falsa); reaplicado aqui pelo canal correto | Thiago Cavalcante |
 
 ---
 
