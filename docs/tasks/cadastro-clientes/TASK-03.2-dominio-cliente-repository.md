@@ -1,6 +1,6 @@
 ### TASK-03.2 — Domínio cliente: repository [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -36,6 +36,7 @@ Acesso a dado do domínio cliente — único lugar que fala com o SQLite para `c
 | Arquivo | Ação | Observação |
 | --- | --- | --- |
 | `backend/src/cliente/repository.ts` | criar | funções acima |
+| `backend/src/cliente/model.ts` | alterar | fora do escopo original (entregue na TASK-03.1) — acrescenta `DadosCliente` (Omit distributivo), ver Histórico |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `backend/test/`.
 
@@ -67,3 +68,4 @@ lida do SQLite nunca sai do `repository`").
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `repository.ts` com `inserirCliente`/`buscarPorDocumento`/`listarAtivos`/`buscarPorId`/`atualizarCliente`/`marcarExcluido`, transação manual (`BEGIN`/`COMMIT`/`ROLLBACK`, `node:sqlite` não tem wrapper de transação pronto). Divergência de tipo corrigida: a assinatura `Omit<Cliente, 'id'\|'criadoEm'\|'atualizadoEm'>` sugerida na task não compila — `Omit` não distribui sobre união, perde o discriminante `tipo`. Criado `DadosCliente` (Omit distributivo) em `model.ts` e usado no lugar. Critérios 1-3 confirmados via script Node contra `dist/`. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
