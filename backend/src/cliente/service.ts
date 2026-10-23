@@ -1,6 +1,6 @@
-import { ConflitoError, RecursoNaoEncontradoError } from '../core/errors';
+import { ConflitoError, RecursoNaoEncontradoError, RegraNegocioError } from '../core/errors';
 import {
-  atualizarCliente as atualizarClienteRepo,
+  atualizarCliente,
   buscarPorDocumento,
   buscarPorId,
   inserirCliente,
@@ -9,42 +9,77 @@ import {
 } from './repository';
 import type { Cliente, DadosCliente } from './model';
 
-export function incluirCliente(dados: DadosCliente): Cliente {
-  if (buscarPorDocumento(dados.documento)) {
-    throw new ConflitoError('Documento já cadastrado para outro cliente.', 'RN-CLI-01');
+// Interface simplificada (dublê de teste, governance/guidelines/backend/node/testing.md §2-3,
+// `criarApp({ clienteRepository })`) — `buscarPorId` devolve o cliente já achatado com
+// `excluidoEm` na própria forma, ao contrário de `repository.ts` real (`{ cliente, excluidoEm }`).
+export interface ClienteRepositorio {
+  buscarPorId(id: string): (Cliente & { excluidoEm: string | null }) | null | undefined;
+  atualizar(id: string, dados: DadosCliente): Cliente;
+  listar(): Cliente[];
+  inserir(dados: DadosCliente): Cliente;
+  excluir(id: string): void;
+  buscarPorDocumento?(documento: string): Cliente | null | undefined;
+}
+
+const repositorioReal: ClienteRepositorio = {
+  buscarPorId: (id) => {
+    const encontrado = buscarPorId(id);
+    return encontrado ? { ...encontrado.cliente, excluidoEm: encontrado.excluidoEm } : null;
+  },
+  atualizar: (id, dados) => atualizarCliente(id, dados),
+  listar: () => listarAtivos(),
+  inserir: (dados) => inserirCliente(dados),
+  excluir: (id) => marcarExcluido(id),
+  buscarPorDocumento: (documento) => buscarPorDocumento(documento),
+};
+
+export function criarClienteService(repo: ClienteRepositorio) {
+  function incluirCliente(dados: DadosCliente): Cliente {
+    if (repo.buscarPorDocumento?.(dados.documento)) {
+      throw new ConflitoError('Documento já cadastrado para outro cliente.', 'RN-CLI-01');
+    }
+
+    return repo.inserir(dados);
   }
 
-  return inserirCliente(dados);
-}
-
-export function listarClientes(): Cliente[] {
-  return listarAtivos();
-}
-
-export function obterCliente(id: string): Cliente {
-  const encontrado = buscarPorId(id);
-
-  if (!encontrado) {
-    throw new RecursoNaoEncontradoError('Cliente não encontrado.', 404);
-  }
-  if (encontrado.excluidoEm) {
-    throw new RecursoNaoEncontradoError('Cliente foi excluído.', 410);
+  function listarClientes(): Cliente[] {
+    return repo.listar();
   }
 
-  return encontrado.cliente;
-}
+  function obterCliente(id: string): Cliente {
+    const encontrado = repo.buscarPorId(id);
 
-export function editarCliente(id: string, dados: DadosCliente): Cliente {
-  obterCliente(id);
-  return atualizarClienteRepo(id, dados);
-}
+    if (!encontrado) {
+      throw new RecursoNaoEncontradoError('Cliente não encontrado.', 404);
+    }
+    if (encontrado.excluidoEm) {
+      throw new RecursoNaoEncontradoError('Cliente foi excluído.', 410);
+    }
 
-export function excluirCliente(id: string): void {
-  const encontrado = buscarPorId(id);
-
-  if (!encontrado) {
-    throw new RecursoNaoEncontradoError('Cliente não encontrado.', 404);
+    const { excluidoEm: _excluidoEm, ...cliente } = encontrado;
+    return cliente as Cliente;
   }
 
-  marcarExcluido(id);
+  function editarCliente(id: string, dados: DadosCliente): Cliente {
+    const atual = obterCliente(id);
+
+    if (dados.tipo !== atual.tipo) {
+      throw new RegraNegocioError('Não é permitido alterar o tipo do cliente.', 400);
+    }
+
+    return repo.atualizar(id, dados);
+  }
+
+  function excluirCliente(id: string): void {
+    if (!repo.buscarPorId(id)) {
+      throw new RecursoNaoEncontradoError('Cliente não encontrado.', 404);
+    }
+
+    repo.excluir(id);
+  }
+
+  return { incluirCliente, listarClientes, obterCliente, editarCliente, excluirCliente };
 }
+
+export const { incluirCliente, listarClientes, obterCliente, editarCliente, excluirCliente } =
+  criarClienteService(repositorioReal);

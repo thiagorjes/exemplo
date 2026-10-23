@@ -12,22 +12,31 @@ declare global {
   }
 }
 
-export function exigirSessao(req: Request, _res: Response, next: NextFunction): void {
-  const sessaoId = req.header('X-Sessao-Id');
+type ValidadorDeSessao = (id: string) => { usuarioId: string; papel: Papel };
 
-  if (!sessaoId) {
-    next(new RegraNegocioError('Sessão ausente.', 401));
-    return;
-  }
+// Factory para injeção de dependência em teste (governance/guidelines/backend/node/testing.md
+// §2-3, `criarApp({ sessaoRepository })`) — `exigirSessao` (módulo) é `criarExigirSessao(validarSessao)`,
+// o caso real.
+export function criarExigirSessao(validador: ValidadorDeSessao) {
+  return function exigirSessao(req: Request, _res: Response, next: NextFunction): void {
+    const sessaoId = req.header('X-Sessao-Id');
 
-  try {
-    const sessao = validarSessao(sessaoId);
-    req.sessao = { usuarioId: sessao.usuarioId, papel: sessao.papel };
-    next();
-  } catch (erro) {
-    next(erro);
-  }
+    if (!sessaoId) {
+      next(new RegraNegocioError('Sessão ausente.', 401));
+      return;
+    }
+
+    try {
+      const sessao = validador(sessaoId);
+      req.sessao = { usuarioId: sessao.usuarioId, papel: sessao.papel };
+      next();
+    } catch (erro) {
+      next(erro);
+    }
+  };
 }
+
+export const exigirSessao = criarExigirSessao(validarSessao);
 
 export function exigirAdminGlobal(req: Request, _res: Response, next: NextFunction): void {
   if (req.sessao?.papel !== 'admin_global') {
