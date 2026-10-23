@@ -1,6 +1,6 @@
 ### TASK-03.4 — Domínio cliente: rotas de inclusão e listagem [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -60,3 +60,4 @@ mesmo padrão de middleware + Zod + tradução de erro).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; `GET /:id`, `PUT /:id`, `DELETE /:id` deliberadamente fora — ver EPIC-04. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `routes.ts` com `POST /` e `GET /`, só `exigirSessao` (sem `exigirAdminGlobal`). Router montado em `/v1/clientes`. Critérios 1-3 confirmados via `curl` (PF `201`; PJ `201` com `socios` no corpo; `GET` em banco vazio → `[]`). `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
