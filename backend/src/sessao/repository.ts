@@ -11,21 +11,6 @@ interface LinhaSessao {
   encerrada_em: string | null;
 }
 
-// Consulta a tabela usuarios diretamente — ainda não existe um domínio "usuario" próprio
-// (chega no EPIC-02). Revisar quando ele existir, para não duplicar acesso à tabela.
-export function buscarUsuarioPorCpf(
-  cpf: string,
-): { id: string; senhaHash: string; papel: Papel } | undefined {
-  const linha = db
-    .prepare('SELECT id, senha_hash, papel FROM usuarios WHERE cpf = ?')
-    .get(cpf) as { id: string; senha_hash: string; papel: Papel } | undefined;
-
-  if (!linha) {
-    return undefined;
-  }
-  return { id: linha.id, senhaHash: linha.senha_hash, papel: linha.papel };
-}
-
 export function criarSessao(usuarioId: string, papel: Papel): SessaoCriada {
   const id = randomBytes(32).toString('hex');
   const agora = new Date().toISOString();

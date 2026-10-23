@@ -1,12 +1,8 @@
 import { conferirSenha } from '../core/senha';
 import { RegraNegocioError } from '../core/errors';
 import { config } from '../config';
-import {
-  buscarSessaoPorId,
-  buscarUsuarioPorCpf,
-  criarSessao,
-  tocarSessao,
-} from './repository';
+import { buscarSessaoPorId, criarSessao, tocarSessao } from './repository';
+import { buscarUsuarioPorCpf } from '../usuario/repository';
 import type { SessaoCriada, SessaoValidada } from './model';
 
 // Mensagem e status idênticos para CPF inexistente e senha errada — qualquer diferença
