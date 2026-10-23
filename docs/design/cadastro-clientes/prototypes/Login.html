@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Protótipo — Login — cadastro-clientes</title>
+<style>
+  :root{
+    --background:#ffffff; --foreground:#374151;
+    --primary:#004b8d; --primary-hover:#003564; --primary-active:#00294e; --primary-foreground:#ffffff;
+    --secondary:#ffffff; --secondary-hover:#f9fafb; --secondary-active:#f3f4f6; --secondary-foreground:#374151; --secondary-border:#e5e7eb;
+    --destructive:#fef2f2; --destructive-border:#fca5a5; --destructive-foreground:#991b1b;
+    --ring:#004b8d;
+    --radius-lg:8px; --radius-xl:12px; --radius-md:6px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f3f4f6;color:var(--foreground);}
+  .stage{width:1440px;min-height:900px;margin:0 auto;background:var(--background);position:relative;}
+  .navbar{height:80px;border-bottom:1px solid var(--secondary-border);display:flex;align-items:center;padding:0 32px;font-weight:600;font-size:18px;color:var(--primary);}
+  .center{display:flex;align-items:center;justify-content:center;min-height:calc(900px - 80px);}
+  .card{width:400px;background:var(--background);border:1px solid var(--secondary-border);border-radius:var(--radius-xl);padding:32px;}
+  h1{font-size:24px;font-weight:600;margin:0 0 8px;}
+  .sub{font-size:14px;color:#85888E;margin:0 0 24px;}
+  .field{margin-bottom:20px;}
+  label{display:block;font-size:14px;font-weight:500;margin-bottom:6px;}
+  input{width:100%;height:44px;padding:0 12px;font-size:14px;border:1px solid var(--secondary-border);border-radius:var(--radius-md);font-family:inherit;color:var(--foreground);}
+  input:focus{outline:none;border-color:var(--ring);box-shadow:0 0 0 2px var(--ring);}
+  input:disabled{background:#f9fafb;color:#9ca3af;}
+  .error-text{font-size:12px;color:var(--destructive-foreground);margin-top:6px;display:none;}
+  .alert{display:none;border:1px solid var(--destructive-border);background:var(--destructive);color:var(--destructive-foreground);border-radius:var(--radius-md);padding:12px;font-size:14px;margin-bottom:20px;}
+  .alert[role="alert"].show{display:block;}
+  .btn{width:100%;height:44px;border-radius:var(--radius-lg);font-size:16px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
+  .btn-primary{background:var(--primary);color:var(--primary-foreground);}
+  .btn-primary:hover{background:var(--primary-hover);}
+  .btn-primary:disabled{background:var(--primary);opacity:.7;cursor:default;}
+  .spinner{width:16px;height:16px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .field.has-error input{border-color:var(--destructive-border);}
+  .field.has-error .error-text{display:block;}
+
+  /* painel de dev */
+  .devpanel{position:fixed;top:16px;right:16px;background:#111827;color:#fff;padding:12px;border-radius:8px;font-size:12px;z-index:999;}
+  .devpanel b{display:block;margin-bottom:8px;}
+  .devpanel button{margin:2px;padding:6px 10px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;font-size:12px;}
+  .devpanel button.active{background:var(--primary);border-color:var(--primary);}
+</style>
+</head>
+<body>
+
+<div class="devpanel">
+  <b>Estado (dev) — tela Login</b>
+  <button data-state="idle" class="active">Idle</button>
+  <button data-state="loading">Loading</button>
+  <button data-state="erro">Erro</button>
+</div>
+
+<div class="stage">
+  <div class="navbar">Banestes — Cadastro de Clientes</div>
+  <div class="center">
+    <div class="card">
+      <h1>Entrar</h1>
+      <p class="sub">Informe seu CPF e senha para acessar o sistema.</p>
+
+      <div class="alert" role="alert" id="alertErro">CPF ou senha inválidos.</div>
+
+      <form onsubmit="return false;">
+        <div class="field" id="fieldCpf">
+          <label for="cpf">CPF</label>
+          <input id="cpf" placeholder="000.000.000-00" value="123.456.789-00">
+          <div class="error-text">Informe um CPF válido.</div>
+        </div>
+        <div class="field" id="fieldSenha">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" value="••••••••">
+          <div class="error-text">Informe a senha.</div>
+        </div>
+        <button class="btn btn-primary" id="btnEntrar" onclick="setState('loading')">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnLabel">Entrar</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Dados de mock — apenas para o tweak de estado, não representam credenciais reais.
+  const MOCK = { cpfValido: "123.456.789-00" };
+
+  function setState(state){
+    document.querySelectorAll('.devpanel button').forEach(b => b.classList.toggle('active', b.dataset.state === state));
+
+    const cpf = document.getElementById('cpf');
+    const senha = document.getElementById('senha');
+    const alertErro = document.getElementById('alertErro');
+    const spinner = document.getElementById('spinner');
+    const btnLabel = document.getElementById('btnLabel');
+    const btnEntrar = document.getElementById('btnEntrar');
+
+    cpf.disabled = false; senha.disabled = false; btnEntrar.disabled = false;
+    spinner.style.display = 'none'; btnLabel.style.display = 'inline';
+    alertErro.classList.remove('show');
+
+    if (state === 'loading') {
+      cpf.disabled = true; senha.disabled = true; btnEntrar.disabled = true;
+      spinner.style.display = 'inline-block'; btnLabel.style.display = 'none';
+      setTimeout(() => setState('erro'), 1200); // simula resposta do servidor
+    }
+    if (state === 'erro') {
+      alertErro.classList.add('show');
+    }
+  }
+
+  document.querySelectorAll('.devpanel button').forEach(b => b.addEventListener('click', () => setState(b.dataset.state)));
+</script>
+</body>
+</html>

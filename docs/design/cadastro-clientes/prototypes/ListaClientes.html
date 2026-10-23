@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Protótipo — Lista de clientes — cadastro-clientes</title>
+<style>
+  :root{
+    --background:#ffffff; --foreground:#374151;
+    --primary:#004b8d; --primary-hover:#003564; --primary-foreground:#ffffff;
+    --secondary:#ffffff; --secondary-hover:#f9fafb; --secondary-border:#e5e7eb; --secondary-foreground:#374151;
+    --ghost-hover:#e6edf4; --ghost-foreground:#004b8d;
+    --destructive:#fef2f2; --destructive-hover:#fee2e2; --destructive-border:#fca5a5; --destructive-foreground:#991b1b;
+    --ring:#004b8d;
+    --radius-lg:8px; --radius-xl:12px; --radius-md:6px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f3f4f6;color:var(--foreground);}
+  .stage{width:1440px;min-height:900px;margin:0 auto;background:var(--background);position:relative;}
+  .navbar{height:80px;border-bottom:1px solid var(--secondary-border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+  .brand{font-weight:600;font-size:18px;color:var(--primary);}
+  .role{font-size:14px;color:#85888E;}
+  .content{padding:32px;}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  h1{font-size:24px;font-weight:600;margin:0;}
+  .search{width:320px;height:44px;padding:0 12px;font-size:14px;border:1px solid var(--secondary-border);border-radius:var(--radius-md);font-family:inherit;}
+  .btn{height:44px;padding:0 16px;border-radius:var(--radius-lg);font-size:16px;font-weight:500;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;}
+  .btn-primary{background:var(--primary);color:var(--primary-foreground);}
+  .btn-secondary{background:var(--secondary);color:var(--secondary-foreground);border:1px solid var(--secondary-border);}
+  .btn-destructive{background:var(--destructive);color:var(--destructive-foreground);border:1px solid var(--destructive-border);}
+  .btn-ghost{background:transparent;color:var(--ghost-foreground);height:36px;padding:0 12px;font-size:14px;}
+  .btn-ghost:hover{background:var(--ghost-hover);}
+  table{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--secondary-border);border-radius:var(--radius-xl);overflow:hidden;}
+  th{text-align:left;font-weight:600;color:#85888E;font-size:12px;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid var(--secondary-border);background:#f9fafb;}
+  td{padding:14px 16px;border-bottom:1px solid var(--secondary-border);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500;}
+  .badge-pf{background:#e6edf4;color:#004b8d;}
+  .badge-pj{background:#f3f4f6;color:#374151;}
+  .empty-state{text-align:center;padding:64px;color:#85888E;}
+  .skeleton-row td{background:linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 50%,#f3f4f6 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;color:transparent;}
+  @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+  .error-view{text-align:center;padding:64px;color:var(--destructive-foreground);}
+
+  /* dialog */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(17,24,39,.4);align-items:center;justify-content:center;z-index:500;}
+  .overlay.show{display:flex;}
+  .dialog{width:420px;background:var(--background);border-radius:var(--radius-xl);padding:24px;}
+  .dialog h3{margin:0 0 8px;font-size:18px;font-weight:600;}
+  .dialog p{margin:0 0 20px;font-size:14px;color:#374151;}
+  .dialog .alert{display:none;border:1px solid var(--destructive-border);background:var(--destructive);color:var(--destructive-foreground);border-radius:var(--radius-md);padding:10px;font-size:13px;margin-bottom:16px;}
+  .dialog .alert.show{display:block;}
+  .dialog-actions{display:flex;justify-content:flex-end;gap:12px;}
+
+  .devpanel{position:fixed;top:16px;right:16px;background:#111827;color:#fff;padding:12px;border-radius:8px;font-size:12px;z-index:999;}
+  .devpanel b{display:block;margin-bottom:8px;}
+  .devpanel button{margin:2px;padding:6px 10px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;font-size:12px;}
+  .devpanel button.active{background:var(--primary);border-color:var(--primary);}
+</style>
+</head>
+<body>
+
+<div class="devpanel">
+  <b>Estado (dev) — lista</b>
+  <button data-state="idle" class="active">Idle</button>
+  <button data-state="loading">Loading</button>
+  <button data-state="erro">Erro</button>
+  <button data-state="vazio">Vazio</button>
+  <br><br>
+  <b>Diálogo de exclusão</b>
+  <button onclick="abrirExclusao(false)">Abrir (normal)</button>
+  <button onclick="abrirExclusao(true)">Abrir (já excluído por outra sessão)</button>
+</div>
+
+<div class="stage">
+  <div class="navbar">
+    <span class="brand">Banestes — Cadastro de Clientes</span>
+    <span class="role">Usuário</span>
+  </div>
+
+  <div class="content">
+    <div class="toolbar">
+      <h1>Clientes</h1>
+      <div style="display:flex;gap:12px;">
+        <input class="search" placeholder="Buscar por nome ou documento">
+        <button class="btn btn-primary">Novo cliente</button>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Nome</th><th>Documento</th><th>Tipo</th><th>Ações</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h3>Excluir cliente?</h3>
+    <p id="dialogText">Tem certeza que deseja excluir <b>Maria Oliveira</b> do cadastro? Esta ação não pode ser desfeita.</p>
+    <div class="alert" id="dialogAlert">Este cliente já havia sido excluído por outra sessão. A lista foi atualizada.</div>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="fecharExclusao()">Cancelar</button>
+      <button class="btn btn-destructive" id="btnExcluir" onclick="confirmarExclusao()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CLIENTES = [
+    { nome: "Maria Oliveira", doc: "123.456.789-00", tipo: "PF" },
+    { nome: "Comércio Silva Ltda", doc: "12.345.678/0001-90", tipo: "PJ" },
+    { nome: "João Pereira", doc: "987.654.321-00", tipo: "PF" },
+  ];
+
+  function render(state){
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    if (state === 'loading'){
+      for (let i=0;i<4;i++) tbody.innerHTML += `<tr class="skeleton-row"><td>x</td><td>x</td><td>x</td><td>x</td></tr>`;
+      return;
+    }
+    if (state === 'erro'){
+      tbody.innerHTML = `<tr><td colspan="4"><div class="error-view">Não foi possível carregar os clientes. <br><button class="btn btn-secondary" style="margin-top:12px;" onclick="render('idle')">Tentar novamente</button></div></td></tr>`;
+      return;
+    }
+    if (state === 'vazio'){
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state">Nenhum cliente cadastrado ainda.</div></td></tr>`;
+      return;
+    }
+    CLIENTES.forEach(c => {
+      const badgeClass = c.tipo === 'PF' ? 'badge-pf' : 'badge-pj';
+      tbody.innerHTML += `<tr>
+        <td>${c.nome}</td><td>${c.doc}</td>
+        <td><span class="badge ${badgeClass}">${c.tipo}</span></td>
+        <td>
+          <button class="btn btn-ghost">Editar</button>
+          <button class="btn btn-ghost" onclick="abrirExclusao(false,'${c.nome}')">Excluir</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  function setState(state){
+    document.querySelectorAll('.devpanel button[data-state]').forEach(b => b.classList.toggle('active', b.dataset.state === state));
+    render(state);
+  }
+
+  function abrirExclusao(jaExcluido, nome){
+    document.getElementById('overlay').classList.add('show');
+    document.getElementById('dialogText').style.display = jaExcluido ? 'none' : 'block';
+    document.getElementById('dialogAlert').classList.toggle('show', jaExcluido);
+    document.getElementById('btnExcluir').style.display = jaExcluido ? 'none' : 'inline-flex';
+    if (nome) document.getElementById('dialogText').innerHTML = `Tem certeza que deseja excluir <b>${nome}</b> do cadastro? Esta ação não pode ser desfeita.`;
+  }
+  function fecharExclusao(){ document.getElementById('overlay').classList.remove('show'); }
+  function confirmarExclusao(){ fecharExclusao(); render('idle'); }
+
+  document.querySelectorAll('.devpanel button[data-state]').forEach(b => b.addEventListener('click', () => setState(b.dataset.state)));
+  render('idle');
+</script>
+</body>
+</html>

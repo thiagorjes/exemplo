@@ -1,0 +1,16 @@
+{
+  "name": "cadastro-clientes-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headless": "cross-env PW_HEADLESS=true playwright test",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "cross-env": "7.0.3",
+    "dotenv": "16.4.7",
+    "typescript": "5.9.2"
+  }
+}

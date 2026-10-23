@@ -1,0 +1,19 @@
+# guidelines.yaml — vínculo entre este sistema e a biblioteca compartilhada.
+#
+# A biblioteca é organizada por stack, não por sistema: `backend/java` vale para
+# todo sistema Java. Este arquivo é o único lugar que diz quais coleções
+# governam ESTE sistema — nada aqui é cópia de norma.
+#
+# Gerado e mantido por /guidelines (flow de setup). Verificado por
+# `.agents/skills/guidelines/scripts/check_guidelines.py --sistema .`
+
+version: 1
+
+# Neste workspace a biblioteca vive dentro do próprio sistema (ele É o framework
+# de governança), não num repositório irmão.
+raiz: governance/guidelines
+
+# Coleções que governam este sistema, no formato <camada>/<stack>.
+colecoes:
+  - frontend/nextjs
+  - backend/node

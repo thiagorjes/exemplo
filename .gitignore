@@ -1,0 +1,24 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente locais (committar só os .env.example)
+.env
+.env.local
+
+# Build
+dist/
+build/
+
+# Banco de dados local (SQLite em arquivo, backend/node)
+*.db
+*.db-journal
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# SO / editor
+.DS_Store
+Thumbs.db

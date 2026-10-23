@@ -1,0 +1,91 @@
+{
+  "$comment": "Cópia de governance/guidelines/frontend/_shared/design-tokens.json para a feature cadastro-clientes. Fonte de verdade continua sendo a coleção frontend/nextjs — regenerar esta cópia se o theme do design system mudar.",
+  "meta": {
+    "system": "transacional-ibanking-web",
+    "feature": "cadastro-clientes",
+    "extractedAt": "2026-09-01",
+    "copiedAt": "2026-10-22",
+    "sources": ["governance/guidelines/frontend/_shared/design-tokens.json"],
+    "tailwindVersion": "3.4.17",
+    "themeStrategy": "CSS custom properties + Tailwind theme; darkMode: ['selector'] (classe .dark)"
+  },
+  "color": {
+    "semantic": {
+      "light": {
+        "background": "#ffffff",
+        "foreground": "#374151",
+        "primary": "#004b8d",
+        "primary-hover": "#003564",
+        "primary-active": "#00294e",
+        "primary-foreground": "#ffffff",
+        "secondary": "#ffffff",
+        "secondary-hover": "#f9fafb",
+        "secondary-active": "#f3f4f6",
+        "secondary-foreground": "#374151",
+        "secondary-border": "#e5e7eb",
+        "ghost-foreground": "#004b8d",
+        "ghost-hover": "#e6edf4",
+        "ghost-active": "#b0c7dc",
+        "destructive": "#fef2f2",
+        "destructive-hover": "#fee2e2",
+        "destructive-active": "#fecaca",
+        "destructive-foreground": "#991b1b",
+        "destructive-border": "#fca5a5",
+        "ring": "#004b8d",
+        "ring-destructive": "#991b1b"
+      },
+      "dark": {
+        "background": "#0c111d",
+        "foreground": "#f5f5f6",
+        "primary": "#004b8d",
+        "primary-hover": "#336fa4",
+        "primary-active": "#004480",
+        "primary-foreground": "#ffffff",
+        "secondary": "#161b26",
+        "secondary-hover": "#1f242f",
+        "secondary-active": "#333741",
+        "secondary-foreground": "#cecfd2",
+        "secondary-border": "#333741",
+        "ghost-foreground": "#b0c7dc",
+        "ghost-hover": "#1f242f",
+        "ghost-active": "#333741",
+        "destructive": "#450a0a",
+        "destructive-hover": "#7f1d1d",
+        "destructive-active": "#991b1b",
+        "destructive-foreground": "#fecaca",
+        "destructive-border": "#7f1d1d",
+        "ring": "#5486b3",
+        "ring-destructive": "#f87171"
+      }
+    },
+    "$note": "success/warning/info ainda não têm token semântico (ver design-system-common.md) — esta feature usa a cor utilitária emerald (Tailwind default) para sucesso, como o restante do sistema já faz em badges."
+  },
+  "typography": {
+    "fontFamily": { "sans": ["Inter", "var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"] },
+    "fontWeight": { "regular": 400, "medium": 500, "semibold": 600 },
+    "fontSize": {
+      "xs":   { "size": "0.75rem",  "px": 12, "lineHeightPx": 18 },
+      "sm":   { "size": "0.875rem", "px": 14, "lineHeightPx": 20 },
+      "base": { "size": "1rem",     "px": 16, "lineHeightPx": 24 },
+      "lg":   { "size": "1.125rem", "px": 18, "lineHeightPx": 28 },
+      "xl":   { "size": "1.25rem",  "px": 20, "lineHeightPx": 30 },
+      "2xl":  { "size": "1.5rem",   "px": 24, "lineHeightPx": 32 },
+      "3xl":  { "size": "1.875rem", "px": 30, "lineHeightPx": 38 }
+    }
+  },
+  "spacing": {
+    "base": 16,
+    "scale": { "sm": 6, "md": 8, "lg": 12, "2xl": 20, "3xl": 24, "4xl": 32, "5xl": 40, "6xl": 44, "7xl": 64, "8xl": 80 }
+  },
+  "borderRadius": { "base": 16, "scale": { "sm": 2, "md": 6, "lg": 8, "xl": 12 } },
+  "controlSizes": {
+    "button": { "md": { "height": 44, "paddingX": 16, "text": "base", "iconOnlyWidth": 48 }, "sm": { "height": 36, "paddingX": 12, "text": "sm", "iconOnlyWidth": 36 } },
+    "input": { "height": 44, "paddingX": 12, "text": "sm", "border": "1px solid secondary-border", "radius": "md (6px)" },
+    "navbar": { "height": 80 },
+    "iconSizes": [16, 18, 20, 24]
+  },
+  "breakpoints": {
+    "$note": "App desktop-first. A feature cadastro-clientes é desktop-only (1440x900) nesta entrega — sm/md/lg não são alvo de teste.",
+    "xl": "1280px"
+  }
+}
