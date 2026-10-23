@@ -1,6 +1,6 @@
 ### TASK-01.2 — Migrations das 4 tabelas e seed do admin_global [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -90,6 +90,7 @@ um caminho fora da API.
 | `backend/src/db/migrations/004_create_table_sessoes.sql` | criar | schema acima |
 | `backend/src/db/migrate.ts` | criar | runner com tabela `_migrations` |
 | `backend/src/db/seed.ts` | criar | cria o 1º `admin_global`, idempotente |
+| `backend/src/core/senha.ts` | criar | `gerarHash`/`conferirSenha` (scrypt) — compartilhado com o domínio `sessao` da TASK-01.3, para não duplicar a lógica de hash |
 | `backend/package.json` | alterar | scripts `migrate` e `seed` |
 | `backend/.env.example` | alterar | `SEED_ADMIN_CPF`, `SEED_ADMIN_SENHA` |
 
@@ -121,3 +122,4 @@ migrations).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`, schema copiado literalmente de `data-model.md`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | 4 migrations criadas literalmente conforme o SQL da task; `migrate.ts` com tabela `_migrations` e aplicação transacional por arquivo. `seed.ts` idempotente. Divergência corrigida: a task pedia scripts `migrate`/`seed` via `ts-node`, dependência não declarada em `governance/guidelines/backend/node/stack.md` — usei o padrão já estabelecido na TASK-01.1 (`npm run build && node --env-file=.env dist/...`) em vez de adicionar uma dependência nova fora da stack aprovada. Criado `backend/src/core/senha.ts` (`gerarHash`/`conferirSenha`, scrypt) como utilitário compartilhado — não estava na tabela de arquivos original, adicionado porque a TASK-01.3 (domínio sessão) vai precisar da mesma lógica de hash para conferir senha no login, e duplicá-la violaria a diretriz de não duplicação. Critérios de aceite 1-3 confirmados manualmente (`npm run migrate` duas vezes sem duplicar; `npm run seed` duas vezes com 1 única linha `admin_global`). `check_escopo.py --base HEAD` → exit 0. |
