@@ -28,7 +28,7 @@ Verificar sincronia: `python .agents/scripts/check_drift.py`.
 
 | Demanda | Flow | Classe | Etapa atual | Estado |
 | --- | --- | --- | --- | --- |
-| cadastro-clientes | feature | risco alto / impacto local | /implement | EPIC-01 a EPIC-03 concluídos (TASK-01.1 a 03.8) — 18 cenários verdes headed (login, usuários, clientes PF/PJ); próximo passo EPIC-04 (editar/excluir cliente) |
+| cadastro-clientes | feature | risco alto / impacto local | /implement | EPIC-01 a EPIC-04 concluídos (TASK-01.1 a 04.4) — 23 cenários verdes headed; próximo passo EPIC-05 (logout, último épico) |
 
 ---
 
