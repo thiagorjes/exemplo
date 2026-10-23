@@ -1,6 +1,6 @@
 ### TASK-03.3 — Domínio cliente: regras de negócio [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -38,6 +38,8 @@ chegam no EPIC-04, mas o método já nasce pronto para os dois usos).
 | Arquivo | Ação | Observação |
 | --- | --- | --- |
 | `backend/src/cliente/service.ts` | criar | funções acima |
+| `backend/src/core/errors.ts` | alterar | fora do escopo original (entregue na TASK-01.1) — ver Histórico |
+| `backend/src/middlewares/error-handler.ts` | alterar | fora do escopo original (entregue na TASK-01.1) — ver Histórico |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `backend/test/`.
 
@@ -69,3 +71,4 @@ aceita `status` no construtor, por isso serve tanto para `404` quanto para `410`
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; `editarCliente`/`excluirCliente` escritos aqui mas só expostos por rota no EPIC-04. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `service.ts` criado. Divergência corrigida: a task afirmava que `RecursoNaoEncontradoError` já aceitava `status` no construtor (TASK-01.1) — na verdade tinha `status = 404` fixo. Ajustado o construtor para `(message, status = 404, codigoRegra?)` e `error-handler.ts` (`categoria()`) para mapear também `410` → `urn:...:erro:nao-encontrado`. Nenhum outro uso existente de `RecursoNaoEncontradoError` foi afetado (conferido via grep, só havia o import em `error-handler.ts`). Critérios 1-3 confirmados via script Node. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |

@@ -11,12 +11,16 @@ export class RegraNegocioError extends Error {
 }
 
 export class RecursoNaoEncontradoError extends Error {
-  readonly status = 404;
+  readonly status: number;
   readonly codigoRegra?: string;
 
-  constructor(message: string, codigoRegra?: string) {
+  // `status` aceita 404 (nunca existiu) ou 410 (existiu e foi excluído) — mesma categoria de
+  // erro (urn:...:erro:nao-encontrado), status diferente conforme a distinção que a Regra de
+  // borda #4 de /solution exige (ver docs/techspec/cadastro-clientes/contracts/cliente.md).
+  constructor(message: string, status = 404, codigoRegra?: string) {
     super(message);
     this.name = 'RecursoNaoEncontradoError';
+    this.status = status;
     this.codigoRegra = codigoRegra;
   }
 }

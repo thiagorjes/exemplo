@@ -13,7 +13,7 @@ interface CorpoProblema {
 const PREFIXO_URN = 'urn:cadastro-clientes:erro';
 
 function categoria(status: number): string {
-  if (status === 404) return 'nao-encontrado';
+  if (status === 404 || status === 410) return 'nao-encontrado';
   if (status === 409) return 'conflito';
   if (status === 401) return 'nao-autenticado';
   if (status === 403) return 'sem-permissao';
