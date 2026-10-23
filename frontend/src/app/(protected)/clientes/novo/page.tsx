@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormularioClientePF } from './_components/formulario-cliente-pf';
+import { FormularioClientePJ } from './_components/formulario-cliente-pj';
 
 type TipoCliente = 'PF' | 'PJ';
 
@@ -31,6 +32,7 @@ export default function IncluirClientePage() {
       </div>
 
       {tipo === 'PF' && <FormularioClientePF />}
+      {tipo === 'PJ' && <FormularioClientePJ />}
     </main>
   );
 }
