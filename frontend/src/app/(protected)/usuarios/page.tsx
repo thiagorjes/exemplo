@@ -1,6 +1,16 @@
-// Placeholder — a tela real de gestão de usuários chega na TASK-02.3. Existe aqui só para
-// que `(protected)/layout.tsx` tenha uma rota de verdade para validar sessão (sem ela, um
-// caminho inexistente cai no 404 global do Next.js, que não passa pelo layout protegido).
-export default function UsuariosPage() {
-  return <p>Gestão de usuários.</p>;
+import { redirect } from 'next/navigation';
+import { validarSessaoAtual } from '@/lib/validar-sessao';
+import { GestaoUsuariosForm } from './_components/gestao-usuarios-form';
+
+// `(protected)/layout.tsx` só confirma que existe sessão válida, não o papel — a conferência
+// de papel é só UX (a segurança real está no 403 do core, ver TASK-02.1); redireciona quem
+// não é admin global para a tela que de fato lhe pertence.
+export default async function GestaoUsuariosPage() {
+  const sessao = await validarSessaoAtual();
+
+  if (sessao?.papel !== 'admin_global') {
+    redirect('/clientes');
+  }
+
+  return <GestaoUsuariosForm />;
 }

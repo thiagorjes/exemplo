@@ -141,6 +141,7 @@ Cobertura que o Gherkin não expressa — propriedade, carga, fronteira numéric
 | Data | Arquivo | O que mudou | Motivo | Aprovador |
 | --- | --- | --- | --- | --- |
 | 2026-10-23 | `e2e/tests/01-login.spec.ts` (SCN-001.2) | `getByRole('alert')` passou a filtrar por texto não vazio (`.filter({ hasText: /.+/ })`) nas duas leituras de mensagem | Next.js App Router injeta um route announcer oculto com `role="alert"` em toda página (Shadow DOM); sem o filtro o seletor colide com ele. Não muda a asserção do cenário. Achado originalmente durante `/implement`, revertido por ter sido aplicado sem autorização (e com atribuição de aprovação falsa); reaplicado aqui pelo canal correto | Thiago Cavalcante |
+| 2026-10-23 | `e2e/fixtures/auth.ts` (`injetarSessao`) | Cookie injetado passou de `__Host-sessao`/`secure: true` para `sessao`/`secure: false` | O app, em ambiente de desenvolvimento (HTTP local), usa esse nome/flag desde a correção do cookie de sessão no EPIC-01 (ver TASK-01.6); a versão antiga do fixture nunca era reconhecida pelo app, derrubando SCN-002.1, SCN-002.2, SCN-003.1 e SCN-003.2 (todas usam `injetarSessao`) de volta para `/login`. Não muda o comportamento testado, só a forma de simular uma sessão já autenticada | Thiago Cavalcante |
 
 ---
 

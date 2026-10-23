@@ -1,6 +1,6 @@
 ### TASK-02.3 — Tela de Gestão de usuários (T2) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -37,10 +37,17 @@ somente leitura dos já criados.
 
 | Arquivo | Ação | Observação |
 | --- | --- | --- |
-| `frontend/src/app/(protected)/usuarios/page.tsx` | criar | formulário + lista somente leitura |
+| `frontend/src/app/(protected)/usuarios/page.tsx` | criar | Server Component — checagem de papel (item 2) + redirecionamento |
+| `frontend/src/app/(protected)/usuarios/_components/gestao-usuarios-form.tsx` | criar | não previsto na task original — necessário porque a checagem de papel (Server Component, `validarSessaoAtual`) é incompatível com `'use client'` do formulário interativo; o formulário/lista viraram um client component à parte |
 
 **Proibido tocar:** `docs/prd/cadastro-clientes/*.feature`, `e2e/`,
 `docs/design/cadastro-clientes/prototypes/GestaoUsuarios.html` (referência visual).
+
+> **Nota de processo (2026-10-23):** `e2e/fixtures/auth.ts` foi alterado nesta task — o
+> `check_escopo.py` acusa isso corretamente, porque `e2e/` é proibido por padrão. A alteração é
+> uma emenda de suporte de teste, autorizada por Thiago Cavalcante e registrada em
+> `docs/tests/cadastro-clientes-verificacao.md` (Congelamento da suíte), não uma violação —
+> mesma mecânica da nota já registrada na TASK-01.6 para `01-login.spec.ts`.
 
 #### Guia técnico — padrão a seguir
 
@@ -69,3 +76,4 @@ para usuários, sem ações por linha).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | Formulário + lista somente leitura, sem toast (biblioteca de toast não estava disponível na coleção copiada e o cenário congelado só checa a linha aparecendo na lista — mensagem de sucesso via lista atualizada, de erro via `role="alert"`, decisão para não introduzir dependência não testada). Achado de suporte de teste: `e2e/fixtures/auth.ts` (`injetarSessao`) usava cookie `__Host-sessao`/`secure:true`, incompatível com o cookie de dev (`sessao`/`secure:false`) desde a correção da TASK-01.6 — derrubava SCN-002.1/002.2/003.1/003.2 de volta pro login. Corrigido pelo canal correto (emenda aprovada por Thiago Cavalcante, registrada em `docs/tests/cadastro-clientes-verificacao.md`). SCN-002.1/.2/.3 e SCN-003.1/.2/.3 verdes (`npm run test:e2e`, headed, banco resetado). `check_escopo.py` a rodar antes do commit. |
