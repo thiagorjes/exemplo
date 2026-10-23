@@ -1,6 +1,6 @@
 ### TASK-05.2 — BFF: logout (limpar cookie) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -49,3 +49,4 @@ Referência viva: o próprio `frontend/src/app/api/sessoes/route.ts` (TASK-01.5,
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `DELETE` em `app/api/sessoes/route.ts`: chama o core (falha silenciosamente, não bloqueia a limpeza do cookie), sempre limpa `NOME_COOKIE_SESSAO` com `maxAge: 0` e devolve `204`. `npx tsc --noEmit` limpo. Confirmado via SCN-009.1/.2 do spec de logout (ver TASK-05.3, testado em conjunto com a navbar). |
