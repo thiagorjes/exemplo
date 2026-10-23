@@ -1,6 +1,6 @@
 ### TASK-03.1 — Domínio cliente: tipos e schema de validação [api]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** api
 - **Executor:** agente
 - **Tentativas:** 3
@@ -83,3 +83,4 @@ Referência viva: `docs/techspec/cadastro-clientes/data-model.md` (colunas de `c
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`, campos copiados literalmente do contrato. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `model.ts` e `schema.ts` criados literalmente conforme a task. Critérios 1-3 confirmados via script Node ad-hoc contra o `dist/` buildado: PF válido aceito, PJ sem sócio rejeitado, `tipo` inválido rejeitado. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
