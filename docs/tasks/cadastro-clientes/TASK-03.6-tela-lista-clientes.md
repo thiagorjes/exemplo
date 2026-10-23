@@ -1,6 +1,6 @@
 ### TASK-03.6 — Tela de Lista de clientes (T3) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -55,3 +55,4 @@ idle/loading/erro/vazio já prototipados).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; ações de editar/excluir deliberadamente fora — ver EPIC-04. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `page.tsx` com tabela, estados loading/vazio/erro e botão "Incluir cliente" (link para `/clientes/novo`, ainda não existe — chega na TASK-03.7). Texto do estado vazio ajustado para "Nenhum cliente cadastrado ainda." (a task sugeria "Nenhum cliente cadastrado." — o cenário congelado `SCN-008.2` exige o texto com "ainda"). SCN-008.1/.2/.3 verdes headed, banco resetado antes. `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
