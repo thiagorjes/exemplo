@@ -1,6 +1,6 @@
 ### TASK-05.3 — Navbar autenticada com ação de logout [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -63,3 +63,4 @@ fixa | altura 80 (`h-[5rem]`), `border-b`, `z-50`").
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`; resolve a pendência Q-001 da TechSpec. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `Navbar` (altura 80px, border-b) com rótulo do papel e botão "Sair" (`loadingLabel="Sair"`, mantém o texto visível durante o `isLoading` — o próprio `Button` do design system já ignora cliques enquanto `isLoading`, resolvendo o critério 3 sem lógica extra). `(protected)/layout.tsx` renderiza a `Navbar` acima do conteúdo, com o `papel` da sessão. SCN-009.1/.2 verdes headed (`npm run test:e2e -- tests/09-logout.spec.ts`). `npx tsc --noEmit` limpo. |
