@@ -22,3 +22,4 @@ playwright/.cache/
 # SO / editor
 .DS_Store
 Thumbs.db
+.claude/scheduled_tasks.lock
