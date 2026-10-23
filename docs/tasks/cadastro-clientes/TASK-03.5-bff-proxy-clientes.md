@@ -1,6 +1,6 @@
 ### TASK-03.5 — BFF: proxy de clientes (incluir/listar) [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -48,3 +48,4 @@ Referência viva: `frontend/src/app/api/usuarios/route.ts` (TASK-02.2).
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `app/api/clientes/route.ts` (`POST`/`GET`), mesmo padrão de `api/usuarios/route.ts`, sem checagem de papel. Critérios 1-2 confirmados via `curl` pelo BFF (login → cookie → `POST` → `201`; `GET` → array com os clientes criados). `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
