@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-
-const NOME_COOKIE = '__Host-sessao';
+import { NOME_COOKIE_SESSAO, OPCOES_COOKIE_SESSAO } from '@/lib/sessao-cookie';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const corpo = await request.json();
@@ -25,11 +24,6 @@ export async function POST(request: Request): Promise<NextResponse> {
   };
 
   const resposta = NextResponse.json({ papel: sessao.papel }, { status: 201 });
-  resposta.cookies.set(NOME_COOKIE, sessao.id, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-    path: '/',
-  });
+  resposta.cookies.set(NOME_COOKIE_SESSAO, sessao.id, OPCOES_COOKIE_SESSAO);
   return resposta;
 }

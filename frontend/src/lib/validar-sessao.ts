@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
-
-const NOME_COOKIE = '__Host-sessao';
+import { NOME_COOKIE_SESSAO as NOME_COOKIE } from '@/lib/sessao-cookie';
 
 export async function validarSessaoAtual(): Promise<{
   usuarioId: string;
