@@ -1,6 +1,6 @@
 ### TASK-02.2 — BFF: proxy de usuários [web]
 
-- **Status:** pendente
+- **Status:** concluída
 - **Sistema:** web
 - **Executor:** agente
 - **Tentativas:** 3
@@ -52,3 +52,4 @@ de cookie e troca por header ao chamar o core.
 | Data | Evento | Detalhe |
 | --- | --- | --- |
 | 2026-10-22 | decisão | Task criada por `/tasks`. |
+| 2026-10-23 | concluída (tentativa 1 de 3) | `app/api/usuarios/route.ts` (`POST`/`GET`), troca cookie `sessao`/`__Host-sessao` (`NOME_COOKIE_SESSAO`) por header `X-Sessao-Id`, repassa status e corpo do core sem reescrever. Critérios de aceite 1-2 confirmados via `curl` (login pelo BFF → cookie → `POST /api/usuarios` → `201`; `GET /api/usuarios` → lista com 3 usuários). `npx tsc --noEmit` limpo. `check_escopo.py --base HEAD` → exit 0. |
