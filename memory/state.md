@@ -28,7 +28,7 @@ Verificar sincronia: `python .agents/scripts/check_drift.py`.
 
 | Demanda | Flow | Classe | Etapa atual | Estado |
 | --- | --- | --- | --- | --- |
-| cadastro-clientes | feature | risco alto / impacto local | /implement | EPIC-01 a EPIC-03 confirmados (21/21 cenários headed). EPIC-04 implementado mas com incidente de integridade corrigido (ver Histórico) — SCN-007.2 ainda falhando (investigação em andamento), demais 22/23 verdes; EPIC-05 (logout) iniciado por fork mas interrompido (200 turnos), WIP não commitado |
+| cadastro-clientes | feature | risco alto / impacto local | /implement | EPIC-01 a EPIC-04 confirmados: 23/23 cenários headed, banco limpo (SCN-007.2 era flakiness de bateria longa, não bug — passou 3/3 isolado e na rodada completa). Próximo e último: EPIC-05 (logout), direto na sessão principal (sem fork, após 2º incidente de integridade) |
 
 ---
 
