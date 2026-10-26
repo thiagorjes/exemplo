@@ -10,7 +10,7 @@
 - **201 Created** — `Location: /v1/usuarios/{id}` — corpo: `{ id, cpf, papel: 'usuario', criadoEm }`
   (nunca a senha nem o hash)
 - **400** (`errors[]`) — `senha` com menos de 8 caracteres (RN-003); `cpf` fora do formato
-- **403** (`type: urn:cadastro-clientes:erro:acesso-negado`) — sessão válida, mas `papel !== 'admin_global'`
+- **403** (`type: urn:cadastro-clientes:erro:sem-permissao`) — sessão válida, mas `papel !== 'admin_global'`
   (RN-006, SCN-002.3)
 - **409** (`type: urn:cadastro-clientes:erro:regra-negocio`, `codigoRegra: RN-USU-01`,
   `dadosApoio: { cpf }`) — CPF já pertence a um usuário existente (RN-002, SCN-002.2)

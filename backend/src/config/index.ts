@@ -3,7 +3,6 @@ import { z } from 'zod';
 const schema = z.object({
   PORT: z.coerce.number().int().positive(),
   DATABASE_PATH: z.string().min(1),
-  SESSION_SECRET: z.string().min(1),
   // Janela de inatividade antes da sessão expirar (RN-004). Opcional — padrão de produção é
   // 300000ms/5min; o ambiente de e2e roda com 30000ms/30s (ver e2e/.env.example) para a suíte
   // headed não ficar arrastada. Não hardcoded no service, por isso vive na config.

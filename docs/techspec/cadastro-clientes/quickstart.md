@@ -51,7 +51,7 @@ e2e/                               (Playwright, na raiz ou em frontend/ — deci
 ```bash
 # Backend
 cd backend && npm install
-cp .env.example .env            # SESSION_SECRET, PORT, DATABASE_PATH, SESSION_IDLE_TIMEOUT_MS
+cp .env.example .env            # PORT, DATABASE_PATH, SESSION_IDLE_TIMEOUT_MS
 npm run migrate                 # aplica src/db/migrations/*.sql
 npm run seed                    # cria o primeiro admin_global (único jeito de obter o 1º usuário)
 npm run dev                     # sobe em PORT (ex. 3001)
@@ -60,7 +60,7 @@ npm run dev                     # sobe em PORT (ex. 3001)
 
 # Frontend
 cd frontend && npm install
-cp .env.example .env            # API_GATEWAY_URL=http://localhost:3001, SESSION_COOKIE_SECRET
+cp .env.example .env.local      # API_GATEWAY_URL=http://localhost:3001
 npm run dev                     # sobe em 3000, consome o backend via app/api/*
 
 # e2e (depois dos dois acima rodando)
