@@ -1,0 +1,23 @@
+{
+  "feature": "cadastro-clientes",
+  "release": "cadastro-clientes-v1",
+  "generatedAt": "2026-10-26",
+  "sealed": false,
+  "reason": "Pacote gerado, nao selado — 1 registro ausente (tokens e tempo de execucao por task individual, que /implement nao instrumentou), conforme IDSD 4.10: registro ausente reprova o selo e nunca e reconstruido por memoria/inferencia. Ver docs/evidence/cadastro-clientes/evidence.md, secao 'Registros ausentes'.",
+  "gatesReprovadosPorFerramenta": [
+    {
+      "gate": "GATE-NFR",
+      "motivo": "check_veredicto.py nao reconhece waiver de RNF registrado em governance/waivers/ — pendencia #13 de memory/state.md. Veredicto humano (aprovado, com WAIVER-001) prevalece sobre a checagem mecanica."
+    }
+  ],
+  "validatePyResult": {
+    "command": "python .agents/scripts/validate.py --mode output --rules .agents/skills/evidence/validate-rules.json --artifact docs/evidence/cadastro-clientes/evidence.md",
+    "exitCode": 1,
+    "errors": [
+      "registro ausente impede o selo: 'Tokens e tempo de execução por task individual' (deveria ter sido escrito por: /implement)"
+    ]
+  },
+  "scenariosGreen": "27/27",
+  "commitRange": "5d42ce5..1920657",
+  "tag": "cadastro-clientes-v1"
+}
