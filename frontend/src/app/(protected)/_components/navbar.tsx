@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 
 const ROTULO_PAPEL: Record<'admin_global' | 'usuario', string> = {
   admin_global: 'Admin global',
@@ -17,7 +18,7 @@ export function Navbar({ papel }: { papel: 'admin_global' | 'usuario' }) {
     if (saindo) return;
     setSaindo(true);
     try {
-      await fetch('/api/sessoes', { method: 'DELETE' });
+      await fetchMutacao('/api/sessoes', { method: 'DELETE' });
     } finally {
       router.push('/login');
     }

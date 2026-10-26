@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 
 type Usuario = {
   id: string;
@@ -43,7 +44,7 @@ export function GestaoUsuariosForm() {
     setCarregando(true);
 
     try {
-      const resposta = await fetch('/api/usuarios', {
+      const resposta = await fetchMutacao('/api/usuarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cpf, senha }),

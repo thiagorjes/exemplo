@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 
 const MENSAGEM_ERRO = 'CPF ou senha inválidos';
 
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setCarregando(true);
 
     try {
-      const resposta = await fetch('/api/sessoes', {
+      const resposta = await fetchMutacao('/api/sessoes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cpf, senha }),

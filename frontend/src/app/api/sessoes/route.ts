@@ -1,8 +1,20 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { NOME_COOKIE_SESSAO, OPCOES_COOKIE_SESSAO } from '@/lib/sessao-cookie';
+import { verificarCsrf } from '@/lib/csrf';
+
+function respostaCsrfInvalido(): NextResponse {
+  return NextResponse.json(
+    { type: 'urn:cadastro-clientes:erro:csrf-invalido', status: 403 },
+    { status: 403 },
+  );
+}
 
 export async function POST(request: Request): Promise<NextResponse> {
+  if (!(await verificarCsrf(request))) {
+    return respostaCsrfInvalido();
+  }
+
   const corpo = await request.json();
 
   const respostaCore = await fetch(`${process.env.API_GATEWAY_URL}/v1/sessoes`, {
@@ -29,7 +41,11 @@ export async function POST(request: Request): Promise<NextResponse> {
   return resposta;
 }
 
-export async function DELETE(): Promise<NextResponse> {
+export async function DELETE(request: Request): Promise<NextResponse> {
+  if (!(await verificarCsrf(request))) {
+    return respostaCsrfInvalido();
+  }
+
   const loja = await cookies();
   const id = loja.get(NOME_COOKIE_SESSAO)?.value;
 

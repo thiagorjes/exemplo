@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 import {
   Table,
   TableBody,
@@ -66,7 +67,7 @@ export default function ListaClientesPage() {
     const respostaAntes = await fetch(`/api/clientes/${cliente.id}`, { cache: 'no-store' });
     const jaEstavaExcluido = respostaAntes.status === 410;
 
-    await fetch(`/api/clientes/${cliente.id}`, { method: 'DELETE' });
+    await fetchMutacao(`/api/clientes/${cliente.id}`, { method: 'DELETE' });
 
     setMensagemExclusao(
       jaEstavaExcluido

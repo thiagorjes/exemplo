@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { NOME_COOKIE_SESSAO } from '@/lib/sessao-cookie';
+import { verificarCsrf } from '@/lib/csrf';
 
 async function sessaoId(): Promise<string | undefined> {
   const loja = await cookies();
@@ -11,6 +12,13 @@ function naoAutenticado(): NextResponse {
   return NextResponse.json(
     { type: 'urn:cadastro-clientes:erro:nao-autenticado', status: 401 },
     { status: 401 },
+  );
+}
+
+function csrfInvalido(): NextResponse {
+  return NextResponse.json(
+    { type: 'urn:cadastro-clientes:erro:csrf-invalido', status: 403 },
+    { status: 403 },
   );
 }
 
@@ -37,6 +45,10 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  if (!(await verificarCsrf(request))) {
+    return csrfInvalido();
+  }
+
   const id = await sessaoId();
   if (!id) {
     return naoAutenticado();
@@ -55,9 +67,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  if (!(await verificarCsrf(request))) {
+    return csrfInvalido();
+  }
+
   const id = await sessaoId();
   if (!id) {
     return naoAutenticado();

@@ -1,10 +1,11 @@
 'use client';
 
 import { ClienteForm, type DadosCliente } from '../_components/cliente-form';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 
 export default function IncluirClientePage() {
   async function salvar(dados: DadosCliente): Promise<Response> {
-    return fetch('/api/clientes', {
+    return fetchMutacao('/api/clientes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dados),

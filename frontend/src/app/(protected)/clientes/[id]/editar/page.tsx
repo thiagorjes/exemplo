@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from 'react';
 import { ClienteForm, type DadosCliente } from '../../_components/cliente-form';
+import { fetchMutacao } from '@/lib/fetch-mutacao';
 
 type Estado =
   | { tipo: 'carregando' }
@@ -38,7 +39,7 @@ export default function EditarClientePage({ params }: { params: Promise<{ id: st
   }, [id]);
 
   async function salvar(dados: DadosCliente): Promise<Response> {
-    return fetch(`/api/clientes/${id}`, {
+    return fetchMutacao(`/api/clientes/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dados),

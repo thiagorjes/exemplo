@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { NOME_COOKIE_SESSAO } from '@/lib/sessao-cookie';
+import { verificarCsrf } from '@/lib/csrf';
 
 async function sessaoId(): Promise<string | undefined> {
   const loja = await cookies();
@@ -8,6 +9,13 @@ async function sessaoId(): Promise<string | undefined> {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  if (!(await verificarCsrf(request))) {
+    return NextResponse.json(
+      { type: 'urn:cadastro-clientes:erro:csrf-invalido', status: 403 },
+      { status: 403 },
+    );
+  }
+
   const id = await sessaoId();
   if (!id) {
     return NextResponse.json(
